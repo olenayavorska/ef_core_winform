@@ -50,6 +50,7 @@ namespace SWP_1
         //SageBook(idSage, idBook).
         [Key]
         public int idSage { get; set; }
+        public int idSage_sage { get; set; }
         public Sage Sage { get; set; }
         public int IdBook { get; set; }
         public Book Book { get; set; }
@@ -59,7 +60,7 @@ namespace SWP_1
     }
     class SageBookContext : DbContext
     {
-        ///public DbSet<Sage> Sages 
+        //public DbSet<Sage> Sages 
         public DbSet<Sage> Sages { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<SageBook> SageBooks { get; set; }

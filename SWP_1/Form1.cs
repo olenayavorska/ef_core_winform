@@ -22,7 +22,15 @@ namespace SWP_1
             db = new SageBookContext();
             //db.Sages.Load();
             db.Sages.Load();
+            db.Books.Load();
             dataGridView1.DataSource = db.Sages.Local.ToBindingList();
+            dataGridView2.DataSource = db.Books.Local.ToBindingList();
+            dataGridView3.DataSource = db.SageBooks.Local.ToBindingList();
+            //comboBox1.DataSource = db.Sages.Local.ToBindingList();
+            comboBox1.DataSource = db.Sages.Local.ToObservableCollection();
+            comboBox1.DisplayMember = "idSage";
+            comboBox3.DataSource = db.Books.Local.ToObservableCollection();
+            comboBox3.DisplayMember = "IdBook";
             
         }
 
@@ -143,6 +151,136 @@ namespace SWP_1
         private void Sage_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void book_add_Click(object sender, EventArgs e)
+        {
+            if (name_book.Text != "" && description_book.Text != "" )
+            {
+                Book book = new Book();
+                //ID++;
+                //sage.IdSage = ID;
+                book.name = name_book.Text;
+                book.description = description_book.Text;
+                db.Books.Add(book);
+
+                db.SaveChanges();
+            }
+            else { MessageBox.Show("fill in all fields, please"); }
+
+        }
+
+        private void book_update_Click(object sender, EventArgs e)
+        {
+            if (dataGridView2.SelectedRows.Count > 0)
+            {
+                int index = dataGridView2.SelectedRows[0].Index;
+                int id = 0;
+                bool converted = Int32.TryParse(dataGridView2[0, index].Value.ToString(), out id);
+                if (converted == false)
+                    return;
+
+                Book book = db.Books.Find(id);
+                book.name = name_book.Text;
+                book.description = description_book.Text;
+                db.SaveChanges();
+
+
+            }
+        }
+
+        private void book_delete_Click(object sender, EventArgs e)
+        {
+            if (dataGridView2.SelectedRows.Count > 0)
+            {
+                int index = dataGridView2.SelectedRows[0].Index;
+                int id = 0;
+                bool converted = Int32.TryParse(dataGridView2[0, index].Value.ToString(), out id);
+                if (converted == false)
+                    return;
+
+                Book book = db.Books.Find(id);
+                db.Books.Remove(book);
+                db.SaveChanges();
+
+
+            }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+                    }
+
+        private void Sage_Book_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void add_sagebook_Click(object sender, EventArgs e)
+        {
+            SageBook sagebook = new SageBook();
+            sagebook.idSage_sage = Convert.ToInt32(comboBox1.Text);
+            sagebook.IdBook = Convert.ToInt32(comboBox3.Text);
+            sagebook.Book = db.Books.Find(sagebook.IdBook);
+            sagebook.Sage= db.Sages.Find(sagebook.idSage_sage);
+            db.SageBooks.Add(sagebook);
+
+            db.SaveChanges();
+        }
+
+        private void edit_sagebook_Click(object sender, EventArgs e)
+        {
+            if (dataGridView3.SelectedRows.Count > 0)
+            {
+                int index = dataGridView3.SelectedRows[0].Index;
+                int id = 0;
+                bool converted = Int32.TryParse(dataGridView3[0, index].Value.ToString(), out id);
+                if (converted == false)
+                    return;
+
+                SageBook sagebook = db.SageBooks.Find(id);
+                sagebook.idSage_sage = Convert.ToInt32(comboBox1.Text);
+                sagebook.IdBook = Convert.ToInt32(comboBox3.Text); 
+                sagebook.Book = db.Books.Find(sagebook.IdBook);
+                sagebook.Sage = db.Sages.Find(sagebook.idSage_sage);
+                db.SaveChanges();
+
+
+            }
+        }
+
+        private void delete_sagebook_Click(object sender, EventArgs e)
+        {
+            if (dataGridView3.SelectedRows.Count > 0)
+            {
+                int index = dataGridView3.SelectedRows[0].Index;
+                int id = 0;
+                bool converted = Int32.TryParse(dataGridView3[0, index].Value.ToString(), out id);
+                if (converted == false)
+                    return;
+
+                SageBook sagebook = db.SageBooks.Find(id);
+                db.SageBooks.Remove(sagebook);
+                db.SaveChanges();
+
+
+            }
+        }
+
+        private void dataGridView3_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dataGridView3.Columns["Sage"].Visible = false;
+            dataGridView3.Columns["Book"].Visible = false;
         }
     }
     
